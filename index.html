@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 0 20px;
+        background: #f5f5f5;
+      }
+      h1 {
+        color: #333;
+      }
+      input {
+        padding: 8px;
+        width: 70%;
+        margin-right: 8px;
+      }
+      button {
+        padding: 8px 16px;
+        background: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      .todo-item {
+        background: white;
+        padding: 12px;
+        margin: 8px 0;
+        display: flex;
+        justify-content: space-between;
+      }
+      .delete-btn {
+        background: #e74c3c;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Todo App</h1>
+
+    <div>
+      <input type="text" id="taskInput" placeholder="Enter a task..." />
+      <button onclick="addTodo()">Add</button>
+    </div>
+
+    <div id="todoList"></div>
+
+    <script>
+      const API = "http://127.0.0.1:8000";
+
+      async function getTodos() {
+        const response = await fetch(`${API}/todos`);
+        const todos = await response.json();
+        const list = document.getElementById("todoList");
+        list.innerHTML = "";
+        todos.forEach((todo) => {
+          list.innerHTML += `
+                    <div class="todo-item">
+                        <span>${todo.task}</span>
+                        <button class="delete-btn" onclick="deleteTodo(${todo.id})">Delete</button>
+                    </div>
+                `;
+        });
+      }
+
+      async function addTodo() {
+        const task = document.getElementById("taskInput").value;
+        await fetch(`${API}/todos`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ task: task, done: false }),
+        });
+        document.getElementById("taskInput").value = "";
+        getTodos();
+      }
+
+      async function deleteTodo(id) {
+        await fetch(`${API}/todos/${id}`, { method: "DELETE" });
+        getTodos();
+      }
+
+      getTodos();
+    </script>
+  </body>
+</html>
