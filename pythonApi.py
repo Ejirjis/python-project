@@ -1,5 +1,6 @@
-import requests
 from datetime import datetime
+
+import requests
 
 
 def get_price(coin):
@@ -32,18 +33,17 @@ def menu():
             with open("saved_prices.txt", "a") as f:
                 f.write(f"{timestamp} | {coin}: ${price}\n")
             print("Price saved!")
-            
-        elif choice == "3":
 
+        elif choice == "3":
             coin = input("Enter coin symbol: ")
             price = get_price(coin)
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             try:
                 with open("saved_prices.txt", "r") as f:
                     history = f.read()
-                print (history)
+                print(history)
             except FileNotFoundError:
-                print ( "File not found")
+                print("File not found")
 
         elif choice == "4":
             print("See you soon!")

@@ -1,21 +1,27 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from sqlalchemy import create_engine, Column, Integer, String, Boolean
+from sqlalchemy import Boolean, Column, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+from fastapi import FastAPI, HTTPException ,Depends
+from fastapi.security import OAuth2PasswordBearer
 
 # Database setup
 engine = create_engine("sqlite:///todos.db")
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
 
-# Database model
+
+# Database mode
 class TodoModel(Base):
     __tablename__ = "todos"
     id = Column(Integer, primary_key=True, index=True)
     task = Column(String)
     done = Column(Boolean, default=False)
 
+
 Base.metadata.create_all(bind=engine)
+
 
 # Pydantic model
 class Todo(BaseModel):
@@ -25,7 +31,6 @@ class Todo(BaseModel):
 
 app = FastAPI()
 
-from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
@@ -42,6 +47,7 @@ def get_todos():
     db.close()
     return todos
 
+
 @app.post("/todos")
 def add_todo(todo: Todo):
     db = SessionLocal()
@@ -50,6 +56,7 @@ def add_todo(todo: Todo):
     db.commit()
     db.close()
     return {"message": "Todo added"}
+
 
 @app.delete("/todos/{todo_id}")
 def delete_todo(todo_id: int):

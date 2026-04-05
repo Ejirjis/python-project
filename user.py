@@ -1,16 +1,10 @@
-# reminder App
-import calendar
-import time
+prices = [10, 25, 5, 50, 100]
+discounted_prices = []
 
+for p in prices :
+    if p > 20 :
+        print (f"Good you can get up to 10% off ")
+        price = p - 10
+        discounted_prices.append (price)
 
-def taske():
-    taske_name = input("What would you like to do today: ")
-    taske_time = input("On What time would you like to do it: ")
-    taske_date = calendar.month = int(input("What date would you like to do it: "))
-    # calendar
-    taskeList = [taske_date, taske_time, taske_name]
-
-    print(f"taske\n {taske_name} , do on {taske_time}, {taske_date}")
-
-
-taske()
+    print (discounted_prices )
